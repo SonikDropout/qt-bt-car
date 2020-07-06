@@ -1,4 +1,3 @@
-import PySide2.QtCore
 from PyQt5.QtBluetooth import QBluetoothDeviceDiscoveryAgent, QBluetoothDeviceInfo
 from PyQt5.QtCore import pyqtSignal, QObject
 
