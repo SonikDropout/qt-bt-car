@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from deviceFinder import DeviceFinder
+from deviceFinder import BtConnector
 
 
 class Example(QWidget):
@@ -15,15 +15,15 @@ class Example(QWidget):
     def initUI(self):
 
         self.searchButton = QPushButton("Search")
-        self.finder = DeviceFinder(self)
+        self.connector = BtConnector(self)
 
         self.vbox = QVBoxLayout()
         self.vbox.addStretch(1)
         self.vbox.addWidget(self.searchButton)
 
-        self.searchButton.clicked.connect(self.finder.find)
-        self.finder.stateChanged.connect(self.change_btn_text)
-        self.finder.scanDone.connect(self.display_found_devices)
+        self.searchButton.clicked.connect(self.connector.scan)
+        self.connector.stateChanged.connect(self.change_btn_text)
+        self.connector.deviceDiscovered.connect(self.display_found_device)
 
         self.setLayout(self.vbox)
 
@@ -35,10 +35,9 @@ class Example(QWidget):
       self.searchButton.setText(text)
 
     
-    def display_found_devices(self, devices):
-      for device in devices:
+    def display_found_device(self, device):
         deviceView = QLabel()
-        deviceView.setText(device.name())
+        deviceView.setText(device.addr)
         deviceView.setAlignment(Qt.AlignCenter)
         self.vbox.addWidget(deviceView)
 
