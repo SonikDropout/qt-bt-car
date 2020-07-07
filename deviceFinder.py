@@ -1,5 +1,5 @@
 from PyQt5.QtCore import pyqtSignal, QObject
-from bluepy.btle import Scanner, DefaultDelegate
+from bluepy.btle import *
 import threading
 
 BLUETOOTH_UUID = "00001101-0000-1000-8000-00805F9B34FB"
@@ -25,7 +25,11 @@ class BtConnector(QObject):
 
   def addDevice(self, dev, isNewDev, isNewData):
     if isNewDev:
-      self.deviceDiscovered.emit(dev)
+      peripheral = Peripheral(dev.addr)
+      for service in peripheral.getServices():
+        if service.uuid is SERVICE_UUID:
+          self.deviceDiscovered.emit(dev)
+          break
 
   def _startScanning(self):
     self._state = 'scanning...'
