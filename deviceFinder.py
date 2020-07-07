@@ -16,12 +16,12 @@ class BtConnector(QObject):
   state = 'idle'
 
   def __init__(self, parent):
-    super.__init__(parent)
+    super().__init__(parent)
     self.btDelegate.handleDiscovery = self.addDevice
-    self.scanner.withDelegate(btDelegate)
+    self.scanner.withDelegate(self.btDelegate)
 
   def scan(self):
-    threading.Thread(target=self._startScanning, daemon=True)
+    threading.Thread(target=self._startScanning, daemon=True).start()
 
   def addDevice(self, dev, isNewDev, isNewData):
     if isNewDev:
@@ -29,8 +29,8 @@ class BtConnector(QObject):
 
   def _startScanning(self):
     self._state = 'scanning...'
-    self.stateChange.emit(self._state)
+    self.stateChanged.emit(self._state)
     self.scanner.scan()
     self._state = 'scanning done'
-    self.stateChanged(self._state)
+    self.stateChanged.emit(self._state)
     
