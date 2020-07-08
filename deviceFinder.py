@@ -10,7 +10,7 @@ BT_DIVIDERS = bytes((161, 178, 195, 195, 212,247))
 BT_DATA_FORMAT = 'HHBBHHBBBHHBB'
 
 class BTDataExeption(BaseException): 
-  # pass
+    pass
 
 class BtConnector(QObject):
 
@@ -20,7 +20,7 @@ class BtConnector(QObject):
   stateChanged = pyqtSignal(str)
   dataRecieved = pyqtSignal(dict)
   devices = []
-  state = 'idle'
+  _state = 'idle'
   foundCar = None
 
   def __init__(self, parent):
@@ -59,13 +59,14 @@ class BtConnector(QObject):
     self._state = 'scanning done'
     self.stateChanged.emit(self._state)
     for dev in self.devices:
-      peripheral = Peripheral
+      peripheral = Peripheral()
       try:
         peripheral.connect(dev.addr)
         peripheral.getServiceByUUID(SERVICE_UUID)
+        print(f'Fround bluetooth car with address: {dev.addr}')
         self.foundCar = peripheral
         self.foundCar.withDelegate(self.btDelegate)
         break
-      except BTLEEException:
+      except BTLEException:
         peripheral.disconnect()
     
