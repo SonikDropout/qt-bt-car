@@ -24,6 +24,7 @@ class Example(QWidget):
         self.searchButton.clicked.connect(self.connector.scan)
         self.connector.stateChanged.connect(self.change_btn_text)
         self.connector.deviceDiscovered.connect(self.display_found_device)
+        self.connectr.dataRecieved.connect(self.display_recieved_data)
 
         self.setLayout(self.vbox)
 
@@ -40,6 +41,9 @@ class Example(QWidget):
         deviceView.setText(device.addr)
         deviceView.setAlignment(Qt.AlignCenter)
         self.vbox.addWidget(deviceView)
+
+    def display_recieved_data(self, data):
+        print(f'Recieved data from bt: {data}')
 
 
 if __name__ == '__main__':
